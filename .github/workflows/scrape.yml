@@ -1,12 +1,16 @@
 # scrape.py
 # pip requirements: requests pandas beautifulsoup4
-import os, csv, time, re
+import os
+import csv
+import time
+import re
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
 OUT_CSV = "prices.csv"
-HEADERS = {"User-Agent":"Mozilla/5.0 (compatible; PriceBot/1.0; +mailto:ton.email@example.com)"}
+HEADERS = {
+    "User-Agent":"Mozilla/5.0 (compatible; PriceBot/1.0; +mailto:ton.email@example.com)"
 
 # Configure tes produits ici (id, type, identifier)
 # type: keepa | backmarket | cdiscount | generic_scrape
