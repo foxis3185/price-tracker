@@ -1,0 +1,44 @@
+name: Weekly price report
+on:
+  schedule:
+    - cron: "0 8 * * SUN"  # dimanche 08:00 UTC
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: pip install pandas
+      - name: Generate report
+        run: |
+          python - <<'PY'
+          import pandas as pd
+          from datetime import datetime, timedelta
+          df = pd.read_csv("prices.csv", header=None, names=["datetime","product","price"], parse_dates=[0])
+          since = datetime.utcnow() - timedelta(days=7)
+          recent = df[df["datetime"] >= since]
+          if recent.empty:
+              print("No data")
+              exit(0)
+          g = recent.groupby("product")["price"].agg(["min","mean","count"]).reset_index()
+          text = "Résumé prix semaine\\n\\n"
+          for _,r in g.iterrows():
+              text += f\"{r['product']}: min={r['min']:.2f}€, moy={r['mean']:.2f}€ (n={int(r['count'])})\\n\"
+          print(text)
+          with open('report.txt','w') as f: f.write(text)
+          PY
+      - name: Send email (GitHub Action)
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # méthode SMTP (ex: Gmail app password) - config dans les secrets
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USER }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Résumé prix hebdo"
+          to: ${{ secrets.REPORT_TO }}
+          body_path: report.txt
