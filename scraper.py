@@ -20,6 +20,8 @@ PRODUCTS = [
     {"name":"Pixel 8a", "type":"keepa", "asin":"B0EXAMPLE"},
     {"name":"iPhone reconditionné (backmarket)", "type":"backmarket", "sku":"BACKMARKET_PRODUCT_ID_OR_SLUG"},
     {"name":"Pixel 8a", "type":"cdiscount", "url":"https://www.cdiscount.com/telephonie/telephone-mobile/smartphone-google-pixel-8a-5g-double-sim-128go-por/f-14404-goo1715718410917.html"},
+    {"name": "Nothing Ear (a)", "type": "generic_scrape", "url": "https://www.nothing.tech/products/ear-a", "selector": "span.text-pure-white"
+    }
 ]
 
 def fetch_keepa(asin):
@@ -86,6 +88,31 @@ def fetch_cdiscount(url):
         raise RuntimeError("Cdiscount: impossible d'extraire nombre")
     s = m.group(0).replace(".", "").replace(",", ".")
     return float(s)
+
+def get_generic_price(url, selector):
+    r = requests.get(url, headers=HEADERS)
+    soup = BeautifulSoup(r.text, "html.parser")
+    el = soup.select_one(selector)
+    if not el:
+        return None
+    price_text = el.text.strip()
+    price = re.findall(r"[\d,.]+", price_text)
+    if price:
+        return float(price[0].replace(",", "."))
+    return None
+
+for product in PRODUCTS:
+    print(f"\n🔍 {product['name']}")
+
+    if product["type"] == "generic_scrape":
+        price = get_generic_price(product["url"], product["selector"])
+    else:
+        price = None
+
+    if price:
+        print(f"💰 Prix : {price} €")
+    else:
+        print("⚠️ Prix non trouvé.")
 
 def append_csv(name, price):
     now = datetime.utcnow().isoformat()
