@@ -1,0 +1,31 @@
+name: Daily price scrape
+on:
+  schedule:
+    - cron: "0 6 * * *"   # tous les jours à 06:00 UTC (ajuste si besoin)
+  workflow_dispatch:     # permet de lancer manuellement
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install requests beautifulsoup4 pandas
+      - name: Run scraper
+        env:
+          KEEPA_KEY: ${{ secrets.KEEPA_KEY }}
+          BACKMARKET_TOKEN: ${{ secrets.BACKMARKET_TOKEN }}
+        run: |
+          python scrape.py
+      - name: Commit CSV (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "actions@github.com"
+          git add prices.csv || true
+          git commit -m "Daily prices: $(date -u +%Y-%m-%d)" || echo "No changes"
+          git push origin HEAD:${{ github.ref_name }}
