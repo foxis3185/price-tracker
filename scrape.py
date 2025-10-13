@@ -11,9 +11,9 @@ HEADERS = {"User-Agent":"Mozilla/5.0 (compatible; PriceBot/1.0; +mailto:ton.emai
 # Configure tes produits ici (id, type, identifier)
 # type: keepa | backmarket | cdiscount | generic_scrape
 PRODUCTS = [
-    {"name":"Galaxy Sxx (amazon)", "type":"keepa", "asin":"B0EXAMPLE"},
-    {"name":"iPhone reconditionné (backmarket)", "type":"backmarket", "sku":"BACKMARKET_PRODUCT_ID_OR_SLUG"},
-    {"name":"Casque XYZ (cdiscount)", "type":"cdiscount", "url":"https://www.cdiscount.com/produit-exemple"},
+   # {"name":"Pixel 8a", "type":"keepa", "asin":"B0EXAMPLE"},
+   # {"name":"iPhone reconditionné (backmarket)", "type":"backmarket", "sku":"BACKMARKET_PRODUCT_ID_OR_SLUG"},
+    {"name":"Pixel 8a", "type":"cdiscount", "url":"https://www.cdiscount.com/telephonie/telephone-mobile/smartphone-google-pixel-8a-5g-double-sim-128go-por/f-14404-goo1715718410917.html"},
 ]
 
 def fetch_keepa(asin):
