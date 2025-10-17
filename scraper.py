@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 OUT_CSV = "prices.csv"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; PriceBot/1.0; +mailto:ton.email@example.com)"
+    "User-Agent": "Mozilla/5.0 (compatible; PriceBot/1.0; +foxis.global@proton.me)"
 }
 
 
