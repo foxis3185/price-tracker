@@ -1,7 +1,7 @@
 name: Weekly price report
 on:
   schedule:
-    - cron: "0 8 * * SUN"  # dimanche 08:00 UTC
+    - cron: "0 8 * * SUN"  # dimanche 00:01 UTC
   workflow_dispatch:
 
 jobs:
